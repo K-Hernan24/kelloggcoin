@@ -27,3 +27,52 @@ blockchain = [
 # Anthony's KelloggCoin balance is 2650
 
 # 👇👇👇 Your code HERE 👇👇👇
+
+# Code to dynamically obtain the name of the users involved in transaction. 
+index = 0
+users = []
+loop do
+  if index == blockchain.length
+    break
+  end
+  users.push(blockchain[index]["to_user"])
+  users.push(blockchain[index]["from_user"])
+  index += 1
+end
+
+#Remove any duplicate values that might appear on To user.
+users = users.uniq
+
+#Code to create a hash in which i will have a list for each of the users with money comng in and money coming out
+users_account = {}
+for user in users
+  users_account[user] = {"money_in"=>0, "money_out"=> 0, "balance"=>0}
+end
+
+index = 0
+users = []
+loop do
+  if index == blockchain.length
+    break
+  end
+  receiver=blockchain[index]["to_user"]
+  sender = blockchain[index]["from_user"]
+  transaction = blockchain[index]["amount"]
+
+  users_account[receiver]["money_in"] += transaction
+  users_account[sender]["money_out"] += transaction
+  users_account[receiver]["balance"] += transaction
+  users_account[sender]["balance"] -= transaction
+  index += 1
+end
+
+
+# Code to verify that numbers were accurate
+# p "Money coming in: #{users_account["ben"]["money_in"]}"
+# p "Money coming out : #{users_account["ben"]["money_out"]}"
+# p "Money in balance : #{users_account["ben"]["balance"]}"
+
+p "Ben's KelloggCoin balance is: $#{users_account["ben"]["balance"]}"
+p "Brian's KelloggCoin balance is: $#{users_account["brian"]["balance"]}"
+p "Evan's KelloggCoin balance is: $#{users_account["evan"]["balance"]}"
+p "Anthony's KelloggCoin balance is: $#{users_account["anthony"]["balance"]}"
